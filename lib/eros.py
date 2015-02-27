@@ -60,7 +60,7 @@ def extract_swir2nirg(path, scene_id):
     return np.dstack((red, green, blue))
 
 
-def show_image(img, title="", **kwargs):
+def show_image(img, title="", **kwargs, filename=""):
     """Show image
 
     Input: img - 3D array of uint16 type
@@ -69,7 +69,10 @@ def show_image(img, title="", **kwargs):
     fig.set_facecolor('white')
     plt.imshow(img / 65535)
     plt.title(title)
-    plt.show()
+    if filename:
+        plt.savefig(filename)
+    else:
+        plt.show()
 
 
 def show_color_hist(rgb_image, xlim=None, ylim=None, **kwargs):
