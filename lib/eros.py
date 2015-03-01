@@ -60,7 +60,7 @@ def extract_swir2nirg(path, scene_id):
     return np.dstack((red, green, blue))
 
 
-def show_image(img, title="", **kwargs, filename=""):
+def show_image(img, title="", filename="", **kwargs):
     """Show image
 
     Input: img - 3D array of uint16 type
