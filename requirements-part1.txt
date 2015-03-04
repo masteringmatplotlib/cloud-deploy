@@ -9,3 +9,4 @@ matplotlib
 scipy
 pandas
 ipython[notebook]
+seaborn

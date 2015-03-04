@@ -1,5 +1,4 @@
 typecheck-decorator == 0.3b
-seaborn
 Image
 networkx
 FileChunkIO
