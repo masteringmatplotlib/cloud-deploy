@@ -1,6 +1,5 @@
 setuptools
 flake8
-typecheck-decorator == 0.3b
 six
 python-dateutil
 pyparsing
@@ -9,6 +8,4 @@ numpy
 matplotlib
 scipy
 pandas
-seaborn
-Image
 ipython[notebook]
