@@ -1,7 +1,6 @@
 typecheck-decorator == 0.3b
 seaborn
 Image
-scikit-image
 FileChunkIO
 boto
 awscli
