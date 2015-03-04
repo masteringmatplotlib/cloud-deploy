@@ -1,6 +1,9 @@
-FROM oubiwann/python
+FROM oubiwann/scipy
 MAINTAINER Py3 Hacker <you@py.hacker>
-RUN git clone https://github.com/masteringmatplotlib/cloud-deploy.git && \
-    cd cloud-deploy && \
+ENV HOME /root
+ENV REPO cloud-deploy
+RUN cd $HOME && \
+    git clone https://github.com/masteringmatplotlib/${REPO}.git
+RUN cd $HOME/$REPO && \
     make docker-setup
-CMD PYTHONPATH=./cloud-deploy/lib:$PYTHONPATH python3
+CMD PYTHONPATH=${HOME}/${REPO}/lib:$PYTHONPATH python3
