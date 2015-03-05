@@ -1,4 +1,4 @@
-FROM oubiwann/python
+FROM masteringmatplotlib/python
 MAINTAINER Duncan McGreggor <oubiwann@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get install -y -q libatlas3-base libblas-dev libblas3 \
