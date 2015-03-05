@@ -2,7 +2,9 @@
 Sample Python library for working with the Landsat data from EROS/USGS.
 """
 import glob
+import os
 import os.path
+import tempfile
 
 import typecheck
 
@@ -11,6 +13,9 @@ import skimage as ski
 
 import numpy as np
 import matplotlib.pyplot as plt
+
+import boto
+from boto import s3
 
 
 BAND_COASTAL_AEROSOL = 1
@@ -24,6 +29,12 @@ BAND_PANCHROM = 8
 BAND_CIRRUS = 9
 BAND_LW_IR_1 = 10
 BAND_LW_IR_2 = 11
+
+
+bucket_name = "scoresbysund"
+scene_id = os.environ.get("SCENE_ID")
+access_key = os.environ.get("AWS_ACCESS_KEY_ID")
+secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 
 def inclusive(min, max):
@@ -94,3 +105,19 @@ def update_image(image, r_limits, g_limits, b_limits):
         image_he[:, :, channel] = ski.exposure.rescale_intensity(
             image[:, :, channel], lim)
     return image_he
+
+
+def progress_callback(complete, total):
+    print("{0}/{1}".format(100 * complete / total, 100))
+
+
+def s3_image(img, title="", filename="", **kwargs):
+    (_, localfile) = tempfile.mkstemp(suffix=".png")
+    print("Generating scene image ...")
+    show_image(img, title, localfile, **kwargs)
+    print("Saving image to S3 ...")
+    conn = boto.connect_s3(access_key, secret_key)
+    key = s3.key.Key(conn.get_bucket(bucket_name))
+    key.key = filename
+    key.set_contents_from_filename(
+        localfile, cb=progress_callback, num_cb=5)
