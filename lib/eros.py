@@ -33,6 +33,10 @@ BAND_LW_IR_2 = 11
 
 bucket_name = "scoresbysund"
 scene_id = os.environ.get("SCENE_ID")
+s3_path = os.environ.get("S3_PATH")
+s3_title = os.environ.get("IMAGE_TITLE")
+s3_filename = os.environ.get("IMAGE_FILENAME")
+s3_image_type = os.environ.get("IMAGE_TYPE").lower()
 access_key = os.environ.get("AWS_ACCESS_KEY_ID")
 secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
@@ -51,10 +55,11 @@ def read_band(path, scene_id, n: inclusive(1, 11)):
     Output: img - 2D array of uint16 type"""
     ext = ".TIF"
     band_name = "_B" + str(n) + ext
-    prefix = os.path.join(path, scene_id, scene_id)
-    tif_list = glob.glob(prefix + "*" + ext)
-    img_idx = tif_list.index(prefix + band_name)
-    return ski.io.imread(tif_list[img_idx])
+    if path.startswith("http"):
+        filename = os.path.join(path, scene_id + band_name)
+    else:
+        filename = os.path.join(path, scene_id, scene_id + band_name)
+    return ski.io.imread(filename)
 
 
 def extract_rgb(path, scene_id):
@@ -111,6 +116,14 @@ def progress_callback(complete, total):
     print("{0}/{1}".format(100 * complete / total, 100))
 
 
+def s3_extract_rgb():
+    return extract_rgb(s3_path, scene_id)
+
+
+def s3_extract_swir2nirg():
+    return extract_swir2nirg(s3_path, scene_id)
+
+    
 def s3_image(img, title="", filename="", **kwargs):
     (_, localfile) = tempfile.mkstemp(suffix=".png")
     print("Generating scene image ...")
@@ -121,3 +134,18 @@ def s3_image(img, title="", filename="", **kwargs):
     key.key = filename
     key.set_contents_from_filename(
         localfile, cb=progress_callback, num_cb=5)
+
+
+def s3_image_rgb():
+    s3_image(s3_extract_rgb(), s3_title, s3_filename)
+
+
+def s3_image_swir2nirg():
+    s3_image(s3_extract_swir2nirg(), s3_title, s3_filename)
+
+
+def s3_generate_image():
+    if s3_image_type == "rgb":
+        s3_image_rgb()
+    elif s3_image_type == "swir2nirg":
+        s3_image_swir2nirg()
