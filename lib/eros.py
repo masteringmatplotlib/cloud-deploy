@@ -12,6 +12,8 @@ from skimage import io, exposure
 import skimage as ski
 
 import numpy as np
+import matplotlib as mpl
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 
 import boto
@@ -32,11 +34,11 @@ BAND_LW_IR_2 = 11
 
 
 bucket_name = "scoresbysund"
-scene_id = os.environ.get("SCENE_ID")
+scene_id = os.environ.get("EROS_SCENE_ID")
 s3_path = os.environ.get("S3_PATH")
-s3_title = os.environ.get("IMAGE_TITLE")
-s3_filename = os.environ.get("IMAGE_FILENAME")
-s3_image_type = os.environ.get("IMAGE_TYPE").lower()
+s3_title = os.environ.get("S3_IMAGE_TITLE")
+s3_filename = os.environ.get("S3_IMAGE_FILENAME")
+s3_image_type = os.environ.get("S3_IMAGE_TYPE").lower()
 access_key = os.environ.get("AWS_ACCESS_KEY_ID")
 secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
