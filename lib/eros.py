@@ -3,7 +3,6 @@ Sample Python library for working with the Landsat data from EROS/USGS.
 """
 import glob
 import os.path
-import tempfile
 
 import typecheck
 

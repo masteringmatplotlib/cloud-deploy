@@ -1,4 +1,5 @@
 import os
+import tempfile
 
 import boto
 from boto import s3
