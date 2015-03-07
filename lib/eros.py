@@ -10,7 +10,8 @@ import typecheck
 
 import numpy as np
 import matplotlib as mpl
-mpl.use("Agg")
+if  os.environ.get("EROS_SCENE_ID") == "true":
+    mpl.use("Agg")
 import matplotlib.pyplot as plt
 
 from skimage import io, exposure
@@ -33,12 +34,12 @@ BAND_LW_IR_1 = 10
 BAND_LW_IR_2 = 11
 
 
-bucket_name = "scoresbysund"
+bucket_name = os.environ.get("S3_BUCKET_NAME")
 scene_id = os.environ.get("EROS_SCENE_ID")
 s3_path = os.environ.get("S3_PATH")
 s3_title = os.environ.get("S3_IMAGE_TITLE")
 s3_filename = os.environ.get("S3_IMAGE_FILENAME")
-s3_image_type = os.environ.get("S3_IMAGE_TYPE").lower()
+s3_image_type = os.environ.get("S3_IMAGE_TYPE", "").lower()
 access_key = os.environ.get("AWS_ACCESS_KEY_ID")
 secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
