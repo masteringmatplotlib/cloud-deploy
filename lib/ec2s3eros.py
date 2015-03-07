@@ -2,7 +2,7 @@ import boto
 from boto import s3
 
 import matplotlib as mpl
-if  os.environ.get("EROS_SCENE_ID") == "true":
+if  os.environ.get("DOCKER_CONTAINER") == "true":
     mpl.use("Agg")
 
 import eros
