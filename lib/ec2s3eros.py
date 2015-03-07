@@ -1,3 +1,5 @@
+import os
+
 import boto
 from boto import s3
 

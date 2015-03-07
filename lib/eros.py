@@ -2,23 +2,17 @@
 Sample Python library for working with the Landsat data from EROS/USGS.
 """
 import glob
-import os
 import os.path
 import tempfile
 
 import typecheck
 
 import numpy as np
-import matplotlib as mpl
-if  os.environ.get("EROS_SCENE_ID") == "true":
-    mpl.use("Agg")
+
 import matplotlib.pyplot as plt
 
 from skimage import io, exposure
 import skimage as ski
-
-import boto
-from boto import s3
 
 
 BAND_COASTAL_AEROSOL = 1
@@ -32,16 +26,6 @@ BAND_PANCHROM = 8
 BAND_CIRRUS = 9
 BAND_LW_IR_1 = 10
 BAND_LW_IR_2 = 11
-
-
-bucket_name = os.environ.get("S3_BUCKET_NAME")
-scene_id = os.environ.get("EROS_SCENE_ID")
-s3_path = os.environ.get("S3_PATH")
-s3_title = os.environ.get("S3_IMAGE_TITLE")
-s3_filename = os.environ.get("S3_IMAGE_FILENAME")
-s3_image_type = os.environ.get("S3_IMAGE_TYPE", "").lower()
-access_key = os.environ.get("AWS_ACCESS_KEY_ID")
-secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 
 def inclusive(min, max):
@@ -113,42 +97,3 @@ def update_image(image, r_limits, g_limits, b_limits):
         image_he[:, :, channel] = ski.exposure.rescale_intensity(
             image[:, :, channel], lim)
     return image_he
-
-
-def progress_callback(complete, total):
-    print("{0}/{1}".format(100 * complete / total, 100))
-
-
-def s3_extract_rgb():
-    return extract_rgb(s3_path, scene_id)
-
-
-def s3_extract_swir2nirg():
-    return extract_swir2nirg(s3_path, scene_id)
-
-    
-def s3_image(img, title="", filename="", **kwargs):
-    (_, localfile) = tempfile.mkstemp(suffix=".png")
-    print("Generating scene image ...")
-    show_image(img, title, localfile, **kwargs)
-    print("Saving image to S3 ...")
-    conn = boto.connect_s3(access_key, secret_key)
-    key = s3.key.Key(conn.get_bucket(bucket_name))
-    key.key = filename
-    key.set_contents_from_filename(
-        localfile, cb=progress_callback, num_cb=5)
-
-
-def s3_image_rgb():
-    s3_image(s3_extract_rgb(), s3_title, s3_filename)
-
-
-def s3_image_swir2nirg():
-    s3_image(s3_extract_swir2nirg(), s3_title, s3_filename)
-
-
-def s3_generate_image():
-    if s3_image_type == "rgb":
-        s3_image_rgb()
-    elif s3_image_type == "swir2nirg":
-        s3_image_swir2nirg()
