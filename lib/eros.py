@@ -8,13 +8,13 @@ import tempfile
 
 import typecheck
 
-from skimage import io, exposure
-import skimage as ski
-
 import numpy as np
 import matplotlib as mpl
 mpl.use("Agg")
 import matplotlib.pyplot as plt
+
+from skimage import io, exposure
+import skimage as ski
 
 import boto
 from boto import s3
