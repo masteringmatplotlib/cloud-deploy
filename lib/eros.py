@@ -58,7 +58,7 @@ def extract_rgb(path, scene_id):
 def extract_swir2nirg(path, scene_id):
     red = read_band(path, scene_id, BAND_SW_IR_2)
     green = read_band(path, scene_id, BAND_NEAR_IR)
-    blue = read_band(path, scene_id, BAND_GREEN)
+    blue = read_band(path, scene_id, BAND_COASTAL_AEROSOL)
     return np.dstack((red, green, blue))
 
 
