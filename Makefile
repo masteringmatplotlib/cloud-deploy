@@ -18,13 +18,11 @@ setup-submodule:
 #
 # Note that this repo overrides the standard project deps to make
 # installation in Docker easier.
-deps:
+deps: base-deps
 	. $(VENV)/bin/activate && \
 	pip3.4 install -r requirements/part1.txt
 	. $(VENV)/bin/activate && \
 	pip3.4 install -r requirements/part2.txt
-	. $(VENV)/bin/activate && \
-	pip3.4 install -r requirements/part3.txt
 
 setup:
 	@git submodule init
